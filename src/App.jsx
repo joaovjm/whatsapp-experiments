@@ -1,27 +1,49 @@
-import './App.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
+import supabase from "../helper/superBaseClient";
 
-function App() {
-  const [message, setMessage] = useState([])
+
+export default function Chat() {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
 
   useEffect(() => {
-    const eventSource = new EventSource("/api/whatsapp-stream");
-    eventSource.onmessage = (event) => {
-      const newMessage = JSON.parse(event.data);
-      setMessage((prev) => [...prev, newMessage]);
-    };
-    return () => {
-      eventSource.close();
-    };
-  }, []);
-  return (
-    <>
-    <h2>Mensagem Whatsapp</h2>
-      {message.map((msg, index) => (
-        <div key={index}>{JSON.stringify(msg)}</div>
-      ))}
-    </>
-  )
-}
+    // Buscar histórico inicial
+    supabase
+      .from('messages')
+      .select('*')
+      .order('timestamp', { ascending: true })
+      .then(({ data }) => setMessages(data));
 
-export default App
+    // Inscrição Realtime
+    const subscription = supabase
+      .from('messages')
+      .on('INSERT', payload => {
+        setMessages(prev => [...prev, payload.new]);
+      })
+      .subscribe();
+
+    return () => supabase.removeSubscription(subscription);
+  }, []);
+
+  const sendMessage = async () => {
+    const msg = { from: 'me', to: 'user2', type: 'text', content: input };
+    await fetch('/api/send-message', {
+      method: 'POST',
+      body: JSON.stringify(msg),
+      headers: { 'Content-Type': 'application/json' }
+    });
+    setInput('');
+  };
+
+  return (
+    <div>
+      <div>
+        {messages.map(m => (
+          <p key={m.id}>{m.from}: {m.type === 'text' ? m.content : <a href={m.content} target="_blank" rel="noopener noreferrer">Arquivo</a>}</p>
+        ))}
+      </div>
+      <input value={input} onChange={e => setInput(e.target.value)} />
+      <button onClick={sendMessage}>Enviar</button>
+    </div>
+  );
+}
