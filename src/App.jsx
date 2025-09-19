@@ -2,7 +2,7 @@ import './App.css'
 import { useEffect, useState } from 'react'
 
 function App() {
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState([])
 
   useEffect(() => {
     fetch("/api/whatsapp")
@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       {message?.map((msg) => (
-        <div key={msg.id}>{msg.message}</div>
+        <div key={msg}>{msg}</div>
       ))}
     </>
   )
