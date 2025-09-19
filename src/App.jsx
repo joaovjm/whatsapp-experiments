@@ -9,7 +9,7 @@ export default function Chat() {
   useEffect(() => {
     // Buscar histórico inicial
     supabase
-      .from('messages')
+      .channel('messages')
       .select('*')
       .order('timestamp', { ascending: true })
       .then(({ data }) => setMessages(data));

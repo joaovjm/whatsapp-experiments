@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     type: msg.type,
     content: msg.content,
   };
-  const { data, error } = await supabase.from("messages").insert([message]);
+  const { data, error } = await supabase.channel("messages").insert([message]);
 
   if (error) return res.status(500).json({ error: error.message });
 
