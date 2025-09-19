@@ -8,11 +8,11 @@ export default function Chat() {
 
   useEffect(() => {
     // Buscar histórico inicial
-    supabase
+    /*supabase
       .from('messages')
       .select('*')
       .order('timestamp', { ascending: true })
-      .then(({ data }) => setMessages(data));
+      .then(({ data }) => setMessages(data));*/
 
     // Inscrição Realtime
     const subscription = supabase
