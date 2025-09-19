@@ -26,7 +26,7 @@ export default function handler(req, res) {
   if (req.method === "POST") {
     // Recebe mensagem do WhatsApp e envia para todos os clients
     console.log("Mensagem recebida:", req.body);
-    sendMessageToClients(req.body);
+   
 
     res.status(200).send("EVENT_RECEIVED");
   }
