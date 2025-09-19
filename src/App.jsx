@@ -12,9 +12,7 @@ function App() {
 
   return (
     <>
-      {message?.map((msg) => (
-        <div key={msg}>{msg}</div>
-      ))}
+      {message}
     </>
   )
 }
