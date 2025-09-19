@@ -2,8 +2,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-let messages = []
-
 export default function handler(req, res) {
     if (req.method === "GET") {
       // Verificação do webhook
@@ -24,8 +22,7 @@ export default function handler(req, res) {
     if (req.method === "POST") {
       // Recebe mensagens do WhatsApp
       console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
-      const text = req.body
-      messages.push(text)
+  
       res.status(200).send("EVENT_RECEIVED");
     }
   }
