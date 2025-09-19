@@ -9,14 +9,14 @@ export default function Chat() {
   useEffect(() => {
     // Buscar histórico inicial
     supabase
-      .channel('messages')
+      .from('messages')
       .select('*')
       .order('timestamp', { ascending: true })
       .then(({ data }) => setMessages(data));
 
     // Inscrição Realtime
     const subscription = supabase
-      .from('messages')
+      .channel('public:messages')
       .on('INSERT', payload => {
         setMessages(prev => [...prev, payload.new]);
       })
