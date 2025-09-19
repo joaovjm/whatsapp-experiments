@@ -23,10 +23,9 @@ export default function handler(req, res) {
   
     if (req.method === "POST") {
       // Recebe mensagens do WhatsApp
-      console.log("Mensagem recebida:", JSON.stringify(req.body.entry[0].changes[0].value.messages[0].text.body));
-      const text = req.body.entry[0].changes[0].value.messages[0].text.body
+      console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
+      const text = req.body
       messages.push(text)
-
       res.status(200).send("EVENT_RECEIVED");
     }
   }
