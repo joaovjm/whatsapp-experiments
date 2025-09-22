@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       type: msg.type,
       content: msg.content,
     };
-    console.log("Mensagem enviada:", message);
+    console.log("Mensagem enviada:", req.body);
     const { data, error } = await supabase
       .channel("messages")
       .insert([message]);
