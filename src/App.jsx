@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import supabase from "../src/helper/superBaseClient.jsx";
+import supabase from "../src/helper/superBaseClient.js";
 
 
 export default function Chat() {
