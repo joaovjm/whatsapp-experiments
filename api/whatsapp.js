@@ -38,11 +38,11 @@ export default async function handler(req, res) {
     const msg = req.body.entry[0].changes[0];
 
     const message = {
-      from: msg,
+      from: msg.value.changes[0].value.messages[0].from,
       to: msg.value.display_phone_number,
-      timestamp: msg.timestamp,
-      type: msg.type,
-      content: msg.content || null,
+      timestamp: msg.value.changes[0].value.messages[0].timestamp,
+      type: msg.value.changes[0].value.messages[0].type,
+      content: msg.value.changes[0].value.messages[0].text.body || null,
     };
     console.log("Mensagem enviada:", req.body.entry[0].changes[0].value.messages[0]);
     console.log("Mensagem enviada:", req.body.entry[0].changes[0].value.contacts[0]);
