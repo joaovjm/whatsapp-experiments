@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     console.log("Mensagem enviada:", req.body.entry[0].changes[0].value.contacts[0]);
     console.log(message)
 
-    const { data, error } = await supabase
+    /*const { data, error } = await supabase
       .channel("messages")
       .insert([message]);
 
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     }
     if(error){
       console.error("Erro ao enviar mensagem:", error);
-    }
+    }*/
     res.status(200).send("EVENT_RECEIVED");
   }
 }
