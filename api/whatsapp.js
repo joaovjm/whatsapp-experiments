@@ -37,7 +37,7 @@ export default async function handler(req, res) {
     //console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
     //sendMessageToClients(req.body);
     const msg = req.body.entry[0].changes[0];
-    console.log(msg)
+
     const message = {
       from: msg?.value?.messages[0]?.from,
       to: msg?.value?.metadata?.display_phone_number,
@@ -46,10 +46,8 @@ export default async function handler(req, res) {
       content: msg?.value?.messages[0]?.text?.body || null,
     };
 
-    console.log(formatPhone(message.to))
 
-
-    /*const { data, error } = await supabase
+    const { data, error } = await supabase
       .channel("messages")
       .insert([message]);
 
@@ -58,7 +56,7 @@ export default async function handler(req, res) {
     }
     if(error){
       console.error("Erro ao enviar mensagem:", error);
-    }*/
+    }
     res.status(200).send("EVENT_RECEIVED");
   }
 }
