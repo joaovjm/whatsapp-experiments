@@ -34,9 +34,9 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     // Recebe mensagens do WhatsApp
     //console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
-    sendMessageToClients(req.body);
-    const msg = req.body.entry[0].changes[0].values;
-    console.log(JSON.stringify(msg))
+    //sendMessageToClients(req.body);
+    const msg = req.body.entry[0].changes[0].value;
+    console.log(msg?.messages[0])
     const message = {
       from: msg.value.changes[0].value.messages[0].from,
       to: msg.value.display_phone_number,
