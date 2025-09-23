@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       text: msg?.value?.messages?.[0]?.text?.body || null,
     };
 
-    console.log("Mensagem recebida:", message);
+    console.log("Mensagem recebida:", msg);
     
 
     const { data, error } = await supabase
