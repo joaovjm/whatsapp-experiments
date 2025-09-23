@@ -36,11 +36,11 @@ export default async function handler(req, res) {
     const msg = req.body.entry[0].changes[0];
 
     const message = {
-      from: msg?.value?.messages[0]?.from,
+      from: msg?.value?.messages?.[0]?.from,
       to: msg?.value?.metadata?.display_phone_number,
-      timestamp: new Date(msg?.value?.messages[0]?.timestamp * 1000),
-      type: msg?.value?.messages[0]?.type,
-      content: msg?.value?.messages[0]?.text?.body || null,
+      timestamp: new Date(msg?.value?.messages?.[0]?.timestamp * 1000),
+      type: msg?.value?.messages?.[0]?.type,
+      content: msg?.value?.messages?.[0]?.text?.body || null,
     };
 
 
