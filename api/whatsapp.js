@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     //console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
     //sendMessageToClients(req.body);
     const msg = req.body.entry[0].changes[0];
-    
+    console.log(msg)
     const message = {
       from: msg?.value?.messages[0]?.from,
       to: msg?.value?.display_phone_number,
