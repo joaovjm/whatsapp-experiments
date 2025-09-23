@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     console.log(msg)
     const message = {
       from: msg?.value?.messages[0]?.from,
-      to: msg?.value?.display_phone_number,
+      to: msg?.value?.metadata?.display_phone_number,
       timestamp: msg?.value?.messages[0]?.timestamp,
       type: msg?.value?.messages[0]?.type,
       content: msg?.value?.messages[0]?.text?.body || null,
