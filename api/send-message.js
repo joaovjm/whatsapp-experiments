@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   }
 
   const { to, message, type = "text" } = req.body;
+  console.log({to, message, type});
 
   try {
     // Envia para WhatsApp API
@@ -32,9 +33,13 @@ export default async function handler(req, res) {
         details: result,
       });
     }
+    return res.status(200).json({
+      success: true,
+      whatsapp: result,
+    });
 
     // Salva no Supabase
-    const { data: insertedData, error: supabaseError } = await supabase
+    /*const { data: insertedData, error: supabaseError } = await supabase
       .from("messages")
       .insert([
         {
@@ -62,7 +67,7 @@ export default async function handler(req, res) {
       success: true,
       whatsapp: result,
     supabase: insertedData,
-    });
+    });*/
   } catch (err) {
     console.error("Erro interno:", err);
     return res.status(500).json({ error: "Erro interno do servidor" });
