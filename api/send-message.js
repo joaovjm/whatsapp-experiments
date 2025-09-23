@@ -1,38 +1,69 @@
 export default async function handler(req, res) {
-    if (req.method !== 'POST') return res.status(405).send('Method not allowed');
-  
-    const {to, message, type} = req.body;
-  
-    // Envia mensagem usando API Graph WhatsApp
-    const response = await fetch(`https://graph.facebook.com/v23.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messaging_product: "whatsapp",
-        to: to,
-        type: type, // text, image, video, document, audio
-        text: { body: message }, // text: { body: message }, image: { id: image_id }, video: { id: video_id }, document: { id: document_id }, audio: { id: audio_id }
-      })
-    });
-  
-    const dt = await response.json();
- 
-    if (dt){
-      const { data, error } = await supabase.from('messages').insert([{
-        from: process.env.WHATSAPP_PHONE_NUMBER,
-        to: to,
-        type: type,
-        content: message,
-        timestamp: new Date()
-      }]);
-      if(error){
-        console.error("Erro ao enviar mensagem:", error);
-      }
-    }
-    //res.status(response.ok ? 200 : 500).json(data);
-    res.status(200).json(dt);
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Método não permitido" });
   }
-  
+
+  const { to, message, type = "text" } = req.body;
+
+  try {
+    // Envia para WhatsApp API
+    const response = await fetch(
+      `https://graph.facebook.com/v21.0/${process.env.WHATSAPP_PHONE_NUMBER_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          to,
+          type,
+          text: { body: message },
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: "Erro na API do WhatsApp",
+        details: result,
+      });
+    }
+
+    // Salva no Supabase
+    const { data: insertedData, error: supabaseError } = await supabase
+      .from("messages")
+      .insert([
+        {
+          from: process.env.WHATSAPP_PHONE_NUMBER,
+          to,
+          type,
+          content: message,
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+
+    if (supabaseError) {
+      console.error("Erro Supabase:", supabaseError);
+      // ainda retorno 200 porque a mensagem foi enviada no WhatsApp
+      return res.status(200).json({
+        success: true,
+        whatsapp: result,
+        supabase: { error: supabaseError.message },
+      });
+    }
+
+    // Tudo certo
+    return res.status(200).json({
+      success: true,
+      whatsapp: result,
+      supabase: insertedData,
+    });
+  } catch (err) {
+    console.error("Erro interno:", err);
+    return res.status(500).json({ error: "Erro interno do servidor" });
+  }
+}
