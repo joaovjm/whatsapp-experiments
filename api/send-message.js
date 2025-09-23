@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   const { to, message, type = "text" } = req.body;
-  console.log({to, message, type});
+  
 
   try {
     // Envia para WhatsApp API
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         }),
       }
     );
-
+    console.log({to, message, type});
     const result = await response.json();
 
     if (!response.ok) {
