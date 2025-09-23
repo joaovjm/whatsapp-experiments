@@ -26,7 +26,7 @@ export default function Chat() {
   }, []);
 
   const sendMessage = async () => {
-    const to = '5521983046033';
+    const to = '5521969268246';
     const type = 'text';
     const message = input;
 
