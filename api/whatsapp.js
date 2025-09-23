@@ -33,12 +33,12 @@ export default async function handler(req, res) {
       type: msg?.value?.messages?.[0]?.type,
       text: msg?.value?.messages?.[0]?.text?.body || null,
     };
-
+    console.log(req.body)
 
     const { data, error } = await supabase
       .from("messages")
       .insert([message]);
-      
+
     if(error){
       console.error("Erro ao enviar mensagem:", error);
     }
