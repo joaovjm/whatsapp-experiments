@@ -21,15 +21,18 @@ export default async function handler(req, res) {
     const data = await response.json();
  
     if (data){
-      await supabase.from('messages').insert([{
+      const { data, error } = await supabase.from('messages').insert([{
         from: process.env.WHATSAPP_PHONE_NUMBER,
         to: to,
         type: type,
         content: message,
         timestamp: new Date()
       }]);
+      if(error){
+        console.error("Erro ao enviar mensagem:", error);
+      }
     }
     //res.status(response.ok ? 200 : 500).json(data);
-    res.status(200).json(response);
+    res.status(200).json(data);
   }
   
