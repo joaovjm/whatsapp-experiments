@@ -6,12 +6,6 @@ dotenv.config();
 
 let clients = [];
 
-function sendMessageToClients(message) {
-  clients.forEach((res) => {
-    res.write(`data: ${JSON.stringify(message)}\n\n`);
-  });
-}
-
 export default async function handler(req, res) {
   if (req.method === "GET") {
     // Verificação do webhook
@@ -30,9 +24,6 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    // Recebe mensagens do WhatsApp
-    //console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
-    //sendMessageToClients(req.body);
     const msg = req.body.entry[0].changes[0];
 
     const message = {
@@ -40,17 +31,14 @@ export default async function handler(req, res) {
       to: msg?.value?.metadata?.display_phone_number,
       timestamp: new Date(msg?.value?.messages?.[0]?.timestamp * 1000),
       type: msg?.value?.messages?.[0]?.type,
-      content: msg?.value?.messages?.[0]?.text?.body || null,
+      text: msg?.value?.messages?.[0]?.text?.body || null,
     };
 
 
     const { data, error } = await supabase
       .from("messages")
       .insert([message]);
-
-    if(data){
-      sendMessageToClients(data);
-    }
+      
     if(error){
       console.error("Erro ao enviar mensagem:", error);
     }

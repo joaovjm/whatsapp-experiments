@@ -45,7 +45,7 @@ export default async function handler(req, res) {
           from: process.env.WHATSAPP_PHONE_NUMBER,
           to,
           type,
-          content: message,
+          text: message,
           timestamp: new Date().toISOString(),
         },
       ])
