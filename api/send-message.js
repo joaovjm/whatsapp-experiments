@@ -29,6 +29,7 @@ export default async function handler(req, res) {
         timestamp: new Date()
       }]);
     }*/
-    res.status(response.ok ? 200 : 500).json(data);
+    //res.status(response.ok ? 200 : 500).json(data);
+    res.status(200).json(response);
   }
   
