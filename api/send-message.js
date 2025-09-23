@@ -33,12 +33,14 @@ export default async function handler(req, res) {
         details: result,
       });
     }
+
+    console.log("FROM:", process.env.WHATSAPP_PHONE_NUMBER);
     // Salva no Supabase
     const { data: insertedData, error: supabaseError } = await supabase
       .from("messages")
       .insert([
         {
-          from: '5521966276333',
+          from: process.env.WHATSAPP_PHONE_NUMBER,
           to,
           type,
           content: message,
