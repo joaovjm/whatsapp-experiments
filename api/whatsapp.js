@@ -1,6 +1,7 @@
 // pages/api/whatsapp.js
 import dotenv from "dotenv";
 import supabase from "../src/helper/superBaseClient.js";
+import formatPhone from "../src/services/formatPhone.js";
 dotenv.config();
 
 let clients = [];
