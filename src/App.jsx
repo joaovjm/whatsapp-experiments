@@ -43,7 +43,7 @@ export default function Chat() {
     <div>
       <div>
         {messages.map(m => (
-          <p key={m.id}>{m.from}: {m.type === 'text' ? m.content : <a href={m.content} target="_blank" rel="noopener noreferrer">Arquivo</a>}</p>
+          <p key={m.id}>{m.from}: {m.type === 'text' ? m.text : <a href={m.text} target="_blank" rel="noopener noreferrer">Arquivo</a>}</p>
         ))}
       </div>
       <input value={input} onChange={e => setInput(e.target.value)} />
