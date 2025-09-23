@@ -19,6 +19,15 @@ export default async function handler(req, res) {
     });
   
     const data = await response.json();
+    if (data){
+      await supabase.from('messages').insert([{
+        from: process.env.WHATSAPP_PHONE_NUMBER,
+        to: to,
+        type: type,
+        message: message,
+        timestamp: new Date()
+      }]);
+    }
     res.status(response.ok ? 200 : 500).json(data);
   }
   
