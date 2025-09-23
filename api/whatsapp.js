@@ -35,15 +35,17 @@ export default async function handler(req, res) {
     // Recebe mensagens do WhatsApp
     //console.log("Mensagem recebida:", JSON.stringify(req.body, null, 2));
     //sendMessageToClients(req.body);
-    const msg = req.body.entry[0].changes[0].value;
-    console.log(msg?.messages[0])
+    const msg = req.body.entry[0].changes[0];
+    
     const message = {
-      from: msg.value.changes[0].value.messages[0].from,
-      to: msg.value.display_phone_number,
-      timestamp: msg.value.changes[0].value.messages[0].timestamp,
-      type: msg.value.changes[0].value.messages[0].type,
-      content: msg.value.changes[0].value.messages[0].text.body || null,
+      from: msg?.value?.messages[0]?.from,
+      to: msg?.value?.display_phone_number,
+      timestamp: msg?.value?.messages[0]?.timestamp,
+      type: msg?.value?.messages[0]?.type,
+      content: msg?.value?.messages[0]?.text?.body || null,
     };
+
+    console.log(message)
 
 
     /*const { data, error } = await supabase
