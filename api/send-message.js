@@ -44,7 +44,8 @@ export default async function handler(req, res) {
           content: message,
           timestamp: new Date().toISOString(),
         },
-      ]);
+      ])
+      .select();
 
     if (supabaseError) {
       console.error("Erro Supabase:", supabaseError);

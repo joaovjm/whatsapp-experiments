@@ -1,7 +1,7 @@
 // pages/api/whatsapp.js
 import dotenv from "dotenv";
 import supabase from "../src/helper/superBaseClient.js";
-import formatPhone from "../src/services/formatPhone.js";
+
 dotenv.config();
 
 let clients = [];
@@ -16,10 +16,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     // Verificação do webhook
     const verify_token = process.env.WEBHOOK_VERIFY_TOKEN;
-    console.log(
-      "Tokend e verificação do webhook: ",
-      process.env.WEBHOOK_VERIFY_TOKEN
-    );
+
     const mode = req.query["hub.mode"];
     const token = req.query["hub.verify_token"];
     const challenge = req.query["hub.challenge"];
