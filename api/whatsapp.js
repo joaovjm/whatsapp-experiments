@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       content: msg?.value?.messages[0]?.text?.body || null,
     };
 
-    console.log(message)
+    console.log(formatPhone(message.to))
 
 
     /*const { data, error } = await supabase
