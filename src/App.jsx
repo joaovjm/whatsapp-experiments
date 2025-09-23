@@ -29,14 +29,13 @@ export default function Chat() {
     const to = '5521983046033';
     const type = 'text';
     const message = input;
-    const msg = { to, type, message };
-    console.log(msg);
+
     const response = await fetch('/api/send-message', {
       method: 'POST',
       body: JSON.stringify({to, type, message}),
       headers: { 'Content-Type': 'application/json' }
     });
-    console.log(await response.json());
+    
     setInput('');
   };
 
