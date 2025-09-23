@@ -17,12 +17,12 @@ export default function Chat() {
     // Inscrição Realtime
     const subscription = supabase
       .channel('public:messages')
-      .on('INSERT', payload => {
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
         setMessages(prev => [...prev, payload.new]);
       })
       .subscribe();
 
-    return () => supabase.removeSubscription(subscription);
+    return () => supabase.unsubscribe(subscription);
   }, []);
 
   const sendMessage = async () => {
