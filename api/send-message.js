@@ -12,9 +12,9 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         messaging_product: "whatsapp",
-        to: msg.to,
-        type: msg.type,
-        text: { body: msg.content }
+        to: '5521983046033',
+        type: msg?.value?.messages[0]?.type,
+        text: { body: msg?.value?.messages[0]?.text?.body || null },
       })
     });
   
