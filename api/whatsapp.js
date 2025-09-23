@@ -1,49 +1,68 @@
 // pages/api/whatsapp.js
 import dotenv from "dotenv";
-import supabase from "../src/helper/superBaseClient.js";
+import supabase from "../../src/helper/superBaseClient.js"; // 👈 ajuste o caminho se precisar
 
 dotenv.config();
 
-let clients = [];
+// Necessário para o Next/Vercel entender JSON vindo do WhatsApp
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+};
 
 export default async function handler(req, res) {
+  // 🔹 Validação do Webhook (GET)
   if (req.method === "GET") {
-    // Verificação do webhook
     const verify_token = process.env.WEBHOOK_VERIFY_TOKEN;
-
     const mode = req.query["hub.mode"];
     const token = req.query["hub.verify_token"];
     const challenge = req.query["hub.challenge"];
 
     if (mode && token && mode === "subscribe" && token === verify_token) {
-      console.log("WEBHOOK VERIFICADO");
-      res.status(200).send(challenge);
+      console.log("✅ WEBHOOK VERIFICADO");
+      return res.status(200).send(challenge);
     } else {
-      res.status(403).send("Token inválido");
+      return res.status(403).send("Token inválido");
     }
   }
 
+  // 🔹 Recebendo mensagens (POST)
   if (req.method === "POST") {
-    const msg = req.body.entry[0];
+    try {
+      console.log("📩 Webhook body:", JSON.stringify(req.body, null, 2));
 
-    const message = {
-      from: msg?.changes[0]?.value?.messages?.[0]?.from,
-      to: msg?.changes[0]?.value?.metadata?.display_phone_number,
-      timestamp: new Date(msg?.changes[0]?.value?.messages?.[0]?.timestamp * 1000),
-      type: msg?.changes[0]?.value?.messages?.[0]?.type,
-      text: msg?.changes[0]?.value?.messages?.[0]?.text?.body || null,
-    };
+      const entry = req.body.entry?.[0];
+      const changes = entry?.changes?.[0];
+      const value = changes?.value;
+      const msg = value?.messages?.[0];
 
-    console.log("Mensagem recebida:", msg);
-    
+      if (msg) {
+        const message = {
+          from: msg.from,
+          to: value.metadata?.display_phone_number,
+          timestamp: new Date(Number(msg.timestamp) * 1000),
+          type: msg.type,
+          text: msg.text?.body || null,
+        };
 
-    const { data, error } = await supabase
-      .from("messages")
-      .insert([message]);
+        console.log("✅ Mensagem recebida:", message);
 
-    if(error){
-      console.error("Erro ao enviar mensagem:", error);
+        const { error } = await supabase.from("messages").insert([message]);
+        if (error) {
+          console.error("❌ Erro ao salvar no Supabase:", error);
+        }
+      } else {
+        console.log("⚠️ Nenhuma mensagem encontrada no payload");
+      }
+
+      return res.status(200).send("EVENT_RECEIVED");
+    } catch (err) {
+      console.error("❌ Erro no handler:", err);
+      return res.status(500).send("Internal Server Error");
     }
-    res.status(200).send("EVENT_RECEIVED");
   }
+
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).end(`Method ${req.method} Not Allowed`);
 }
