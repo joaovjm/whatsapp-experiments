@@ -24,14 +24,14 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "POST") {
-    const msg = req.body.entry[0].changes[0];
+    const msg = req.body;
 
     const message = {
-      from: msg?.value?.messages?.[0]?.from,
-      to: msg?.value?.metadata?.display_phone_number,
-      timestamp: new Date(msg?.value?.messages?.[0]?.timestamp * 1000),
-      type: msg?.value?.messages?.[0]?.type,
-      text: msg?.value?.messages?.[0]?.text?.body || null,
+      from: msg?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.from,
+      to: msg?.entry?.[0]?.changes[0]?.value?.metadata?.display_phone_number,
+      timestamp: new Date(msg?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.timestamp * 1000),
+      type: msg?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.type,
+      text: msg?.entry?.[0]?.changes[0]?.value?.messages?.[0]?.text?.body || null,
     };
 
     console.log("Mensagem recebida:", msg);
